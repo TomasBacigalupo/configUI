@@ -25,6 +25,13 @@ import Orders from './Orders';
 import Form from "@rjsf/material-ui"
 import {getCreateDeviceForm} from "../services/apiService";
 import { useState, useEffect } from 'react';
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
+import DashboardIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import ListItemText from "@material-ui/core/ListItemText/ListItemText";
+
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import DevicesIcon from '@material-ui/icons/Devices';
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -196,7 +203,7 @@ export default function Dashboard() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
 
-    const [schemaApi, setSchema] = React.useState({});
+    const [schemaApi, setSchema] = React.useState(schema);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -245,7 +252,31 @@ export default function Dashboard() {
                     </IconButton>
                 </div>
                 <Divider />
-                <List>{mainListItems}</List>
+                <List>
+                    <div>
+                    <ListItem button>
+                            <ListItemIcon>
+                                <DashboardIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Dashboard" onClick={async ()=> {
+                                const myDevices = await getCreateDeviceForm();
+                                setSchema(myDevices.data)
+                            }} />
+                        </ListItem>
+                        <ListItem button >
+                            <ListItemIcon>
+                                <DevicesIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Devices" />
+                        </ListItem>
+                        <ListItem button >
+                            <ListItemIcon>
+                                <ListAltIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="Pools" />
+                        </ListItem>
+                    </div>
+                </List>
                 <Divider />
                 <List>{secondaryListItems}</List>
             </Drawer>
@@ -271,13 +302,12 @@ export default function Dashboard() {
                                 {/*<Orders />*/}
                                 <Form schema={schema}
                                       onChange={console.log()}
-                                    // onSubmit={onSubmit}
+                                      onSubmit={console.log(schemaApi)}
                                       onError={console.log("errors")} />
                             </Paper>
                         </Grid>
                     </Grid>
                     <Box pt={4}>
-                        {console.log(schemaApi)}
                         <Copyright />
                     </Box>
                 </Container>
