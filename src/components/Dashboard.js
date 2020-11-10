@@ -127,7 +127,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //TODO: bring from api
-const schema = {
+const schemaDevice = {
     title: "Device",
     description: "device creation form",
     type: "object",
@@ -199,11 +199,35 @@ const schema = {
     }
 };
 
+const schemaPool = {
+    title: "Pool",
+    description: "pool creation form",
+    type: "object",
+    required: ["name"],
+    properties: {
+        name: {type: "string", title: "name"},
+        subnets: {
+            title: "Subnets",
+            type: "array",
+            items: {
+                type: "object",
+                properties: {
+                    tag: {
+                        title: "Subnet",
+                        type: "string",
+                        default: "subnet_01"
+                    }
+                }
+            }
+        },
+    }
+};
+
 export default function Dashboard() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
 
-    const [schemaApi, setSchema] = React.useState(schema);
+    const [schemaApi, setSchema] = React.useState(schemaDevice);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -260,20 +284,21 @@ export default function Dashboard() {
                             </ListItemIcon>
                             <ListItemText primary="Dashboard" onClick={async ()=> {
                                 const myDevices = await getCreateDeviceForm();
-                                setSchema(myDevices.data)
+                                // setSchema(myDevices.data)
+                                console.log(myDevices.data);
                             }} />
                         </ListItem>
                         <ListItem button >
                             <ListItemIcon>
                                 <DevicesIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Devices" />
+                            <ListItemText primary="Devices"  onClick={()=>{setSchema(schemaDevice)}}/>
                         </ListItem>
                         <ListItem button >
                             <ListItemIcon>
                                 <ListAltIcon/>
                             </ListItemIcon>
-                            <ListItemText primary="Pools" />
+                            <ListItemText primary="Pools" onClick={()=>{setSchema(schemaPool)}} />
                         </ListItem>
                     </div>
                 </List>
@@ -284,23 +309,10 @@ export default function Dashboard() {
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
                     <Grid container spacing={3}>
-                        {/* Chart */}
-                        <Grid item xs={12} md={8} lg={9}>
-                            <Paper className={fixedHeightPaper}>
-                                <Chart />
-                            </Paper>
-                        </Grid>
-                        {/* Recent Deposits */}
-                        <Grid item xs={12} md={4} lg={3}>
-                            <Paper className={fixedHeightPaper}>
-                                <Deposits />
-                            </Paper>
-                        </Grid>
-                        {/* Recent Orders */}
                         <Grid item xs={12}>
                             <Paper className={classes.paper}>
                                 {/*<Orders />*/}
-                                <Form schema={schema}
+                                <Form schema={schemaApi}
                                       onChange={console.log()}
                                       onSubmit={console.log(schemaApi)}
                                       onError={console.log("errors")} />
