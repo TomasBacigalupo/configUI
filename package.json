@@ -16,6 +16,7 @@
     "clsx": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-json-table": "^0.1.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "latest",
     "recharts": "^1.8.5"
@@ -33,6 +34,7 @@
     ]
   },
   "devDependencies": {
-    "axios": "^0.21.0"
+    "axios": "^0.21.0",
+    "react-json-to-table": "^0.1.7"
   }
 }

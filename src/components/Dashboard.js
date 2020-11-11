@@ -19,19 +19,16 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
 import Form from "@rjsf/material-ui"
 import {getCreateDeviceForm} from "../services/apiService";
-import { useState, useEffect } from 'react';
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
 import DashboardIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
-
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import DevicesIcon from '@material-ui/icons/Devices';
+import {JsonToTable} from "react-json-to-table";
+import devices from "./devices"
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -118,11 +115,11 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding: theme.spacing(2),
         display: 'flex',
-        overflow: 'auto',
+        overflow: 'auto',        height: 600,
+
         flexDirection: 'column',
     },
     fixedHeight: {
-        height: 240,
     },
 }));
 
@@ -222,7 +219,90 @@ const schemaPool = {
         },
     }
 };
+const myJson = {
+    "Student": { name: "Jack", email: "jack@xyz.com" },
+    "Student id": 888,
+    "Sponsors": [
+        { name: "john", email: "john@@xyz.com" },
+        { name: "jane", email: "jane@@xyz.com" }
+    ]
+};
+const otherJson= {
+    "Devices":[
+        {
+            "coordinates": {
+                "latitude": -33.3185398,
+                "longitude": -71.4240873
+            },
+            "enabled": true,
+            "id": 1,
+            "ip_address": "10.100.14.225",
+            "metadata": {
+                "city": "Casablanca",
+                "country": "Chile",
+                "telemetry_ip_address": "10.100.64.15/24"
+            },
+            "name": "cas-cassini-00",
+            "port_channels": {},
+            "tags": [
+                "core",
+                "cas",
+                "v_costa",
+                "cassini"
+            ],
+            "type": "Cassini"
+        },
+        {
+            "coordinates": {
+                "latitude": -33.3580075,
+                "longitude": -70.6779696
+            },
+            "coordinates_offset": {
+                "latitude": 0.05,
+                "longitude": 0
+            },
+            "enabled": true,
+            "id": 2,
+            "ip_address": "10.100.14.131",
+            "metadata": {
+                "city": "Huechuraba",
+                "country": "Chile"
+            },
+            "name": "clk-cassini-00",
+            "port_channels": {},
+            "tags": [
+                "core",
+                "clk",
+                "metro_scl",
+                "cassini"
+            ],
+            "type": "Cassini"
+        }
+    ]
+};
+const schemaTable = {
+    properties: {
+        name: {
+            type: 'string',
+            title: 'Name',
+        },
+    }
+};
 
+
+var items = [
+    { name: 'Louise', age: 27, color: 'red' },
+    { name: 'Margaret', age: 15, color: 'blue'},
+    { name: 'Lisa', age:34, color: 'yellow'}
+];
+
+var columns = [
+    'name',
+    {key: 'age', label: 'Age'},
+    {key: 'color', label: 'Colourful', cell: function( item, columnKey ){
+            return <span style={{color: item.color}}>{ item.color }</span>;
+        }}
+];
 export default function Dashboard() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
@@ -237,6 +317,7 @@ export default function Dashboard() {
         setOpen(false);
     };
 
+    const onSubmit = ({formData}, e) => console.log("Data submitted: ",  formData);
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
     return (
@@ -307,15 +388,22 @@ export default function Dashboard() {
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                <Container maxWidth="lg" className={classes.container}>
+                <Container maxWidth="lg"  className={classes.container}>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
+                            <Paper className={fixedHeightPaper}>
+                                {/*<Table />*/}
+                                <JsonToTable json={devices} />
+
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12}>
                             <Paper className={classes.paper}>
-                                {/*<Orders />*/}
+                                {/*<Form />*/}
                                 <Form schema={schemaApi}
                                       onChange={console.log()}
-                                      onSubmit={console.log(schemaApi)}
-                                      onError={console.log("errors")} />
+                                      onSubmit={onSubmit}
+                                      onError={console.log("errors")} theme={{}}/>
                             </Paper>
                         </Grid>
                     </Grid>
