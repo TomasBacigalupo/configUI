@@ -11,15 +11,20 @@
   "dependencies": {
     "@material-ui/core": "latest",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/styles": "^4.10.0",
     "@rjsf/core": "^2.4.0",
     "@rjsf/material-ui": "^2.4.0",
     "clsx": "latest",
-    "react": "latest",
-    "react-dom": "latest",
+    "material-ui-json-schema-viewer": "^1.1.1",
+    "react": "^16.14.0",
+    "react-dom": "16.14.0",
+    "react-hot-loader": "^4.13.0",
     "react-json-table": "^0.1.1",
+    "react-jsonschema-table": "^0.0.2-beta.63",
     "react-router-dom": "^5.2.0",
     "react-scripts": "latest",
-    "recharts": "^1.8.5"
+    "recharts": "^1.8.5",
+    "history": "latest"
   },
   "browserslist": {
     "production": [
@@ -35,6 +40,7 @@
   },
   "devDependencies": {
     "axios": "^0.21.0",
+    "faker": "^5.1.0",
     "react-json-to-table": "^0.1.7"
   }
 }

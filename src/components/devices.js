@@ -1,10 +1,10 @@
-const devices = {"Devices":[
+const devices = [
     {
         "coordinates": {
             "latitude": -33.3185398,
             "longitude": -71.4240873
         },
-        "enabled": "true",
+        "enabled": true,
         "id": 1,
         "ip_address": "10.100.14.225",
         "metadata": {
@@ -1777,6 +1777,6 @@ const devices = {"Devices":[
         ],
         "type": "Cassini"
     }
-]};
+];
 
 export default devices;

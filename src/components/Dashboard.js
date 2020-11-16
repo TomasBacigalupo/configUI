@@ -28,7 +28,16 @@ import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import DevicesIcon from '@material-ui/icons/Devices';
 import {JsonToTable} from "react-json-to-table";
-import devices from "./devices"
+import devices from "./devices";
+import Example from "./Example";
+import Table from 'react-jsonschema-table';
+import "../styles/table.css"
+
+
+import SchemaViewer from 'material-ui-json-schema-viewer';
+import {blue} from "@material-ui/core/colors";
+import TableDevices from "./TableDevices";
+import pools from "./pools";
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -122,6 +131,24 @@ const useStyles = makeStyles((theme) => ({
     fixedHeight: {
     },
 }));
+
+var settings = {
+    cellClass: function( current, key, item){
+        return current + ' cell_' + key + item.age;
+    },
+    classPrefix: 'mytable',
+    header: true,
+    headerClass: function( current, key ){
+        if( key == 'color')
+            return current + ' imblue';
+        return current;
+    },
+    keyField: 'name',
+    noRowsMessage: 'Where are my rows?',
+    rowClass: function( current, item ){
+        return current + ' row_' + item.name;
+    }
+};
 
 //TODO: bring from api
 const schemaDevice = {
@@ -219,95 +246,64 @@ const schemaPool = {
         },
     }
 };
-const myJson = {
-    "Student": { name: "Jack", email: "jack@xyz.com" },
-    "Student id": 888,
-    "Sponsors": [
-        { name: "john", email: "john@@xyz.com" },
-        { name: "jane", email: "jane@@xyz.com" }
-    ]
-};
-const otherJson= {
-    "Devices":[
-        {
-            "coordinates": {
-                "latitude": -33.3185398,
-                "longitude": -71.4240873
-            },
-            "enabled": true,
-            "id": 1,
-            "ip_address": "10.100.14.225",
-            "metadata": {
-                "city": "Casablanca",
-                "country": "Chile",
-                "telemetry_ip_address": "10.100.64.15/24"
-            },
-            "name": "cas-cassini-00",
-            "port_channels": {},
-            "tags": [
-                "core",
-                "cas",
-                "v_costa",
-                "cassini"
-            ],
-            "type": "Cassini"
-        },
-        {
-            "coordinates": {
-                "latitude": -33.3580075,
-                "longitude": -70.6779696
-            },
-            "coordinates_offset": {
-                "latitude": 0.05,
-                "longitude": 0
-            },
-            "enabled": true,
-            "id": 2,
-            "ip_address": "10.100.14.131",
-            "metadata": {
-                "city": "Huechuraba",
-                "country": "Chile"
-            },
-            "name": "clk-cassini-00",
-            "port_channels": {},
-            "tags": [
-                "core",
-                "clk",
-                "metro_scl",
-                "cassini"
-            ],
-            "type": "Cassini"
-        }
-    ]
-};
-const schemaTable = {
+
+const schema = {
     properties: {
-        name: {
+        coordinates: {
+            type: 'string',
+            title: 'Coordinates',
+        },
+        enabled: {
+            type: 'boolean',
+            title: 'Enabled',
+        },
+        id: {
+            type: 'integer',
+            title: 'id',
+        },
+        metadata:{
+            type: 'string',
+            title: 'metadata',
+        },
+        name:{
             type: 'string',
             title: 'Name',
         },
+        port_channels: {
+            type: 'string',
+            title: 'Port Channels',
+        },
+        tags:{
+            type: 'string',
+            title: 'Tags'
+        },
+        // type:{},
+        // coordinates_offset:{},
     }
 };
 
-
-var items = [
-    { name: 'Louise', age: 27, color: 'red' },
-    { name: 'Margaret', age: 15, color: 'blue'},
-    { name: 'Lisa', age:34, color: 'yellow'}
+const deviceColumns = [
+    { id: 'id', label: 'ID', minWidth: 170},
+    { id: 'ip_address', label: 'IP address', minWidth: 100 },
+    { id: 'name', label: 'Name', minWidth: 100 },
+    { id: 'type', label: 'Type', minWidth: 100 },
+    { id: 'enabled', label: 'Enable', minWidth: 100 },
 ];
 
-var columns = [
-    'name',
-    {key: 'age', label: 'Age'},
-    {key: 'color', label: 'Colourful', cell: function( item, columnKey ){
-            return <span style={{color: item.color}}>{ item.color }</span>;
-        }}
+const poolColumns = [
+    {id: 'id', label: 'ID', minWidth:170},
+    {id: 'name', label: 'Name'},
+    {id: 'subnets', label: 'Subnets'},
 ];
+
+
 export default function Dashboard() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
 
     const [schemaApi, setSchema] = React.useState(schemaDevice);
+    const [cols, setCols] = React.useState(deviceColumns);
+    const [rows, setRows] = React.useState(devices);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -322,6 +318,12 @@ export default function Dashboard() {
 
     return (
         <div className={classes.root}>
+            <link
+                rel="stylesheet"
+                href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+                integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+                crossOrigin="anonymous"
+            />
             <CssBaseline />
             <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
                 <Toolbar className={classes.toolbar}>
@@ -373,13 +375,21 @@ export default function Dashboard() {
                             <ListItemIcon>
                                 <DevicesIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Devices"  onClick={()=>{setSchema(schemaDevice)}}/>
+                            <ListItemText primary="Devices"  onClick={()=>{
+                                setSchema(schemaDevice);
+                                setCols(deviceColumns);
+                                setRows(devices);
+                            }}/>
                         </ListItem>
                         <ListItem button >
                             <ListItemIcon>
                                 <ListAltIcon/>
                             </ListItemIcon>
-                            <ListItemText primary="Pools" onClick={()=>{setSchema(schemaPool)}} />
+                            <ListItemText primary="Pools" onClick={()=>{
+                                setSchema(schemaPool);
+                                setRows(pools);
+                                setCols(poolColumns);
+                            }} />
                         </ListItem>
                     </div>
                 </List>
@@ -391,11 +401,7 @@ export default function Dashboard() {
                 <Container maxWidth="lg"  className={classes.container}>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
-                            <Paper className={fixedHeightPaper}>
-                                {/*<Table />*/}
-                                <JsonToTable json={devices} />
-
-                            </Paper>
+                            <TableDevices  cols={cols} rows={rows}/>
                         </Grid>
                         <Grid item xs={12}>
                             <Paper className={classes.paper}>

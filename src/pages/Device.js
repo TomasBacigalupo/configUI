@@ -3,7 +3,7 @@ import Dashboard from "../components/Dashboard";
 import Example from "../components/Example";
 import "../styles/table.css"
 
-class Home extends Component{
+class Device extends Component{
     constructor(props) {
         super(props);
     }
@@ -13,4 +13,4 @@ class Home extends Component{
     }
 
 }
-export default Home;
+export default Device;
