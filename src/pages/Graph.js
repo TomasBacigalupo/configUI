@@ -1,4 +1,4 @@
-import {Component} from "react";
+import React, {Component} from "react";
 import {
     GraphView, // required
     Edge, // optional
@@ -59,7 +59,14 @@ import GraphConfig, {
     SPECIAL_EDGE_TYPE,
     SPECIAL_TYPE,
     SKINNY_TYPE,
-} from './graph-config'; // Configures node/edge types
+} from './graph-config';
+import Dialog from "@material-ui/core/Dialog";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle"; // Configures node/edge types
 
 var sample = {
     "nodes": [
@@ -146,14 +153,23 @@ class Graph extends Component {
         super(props);
 
         this.state = {
+            name: "",
+            open: false,
             copiedNode: null,
             graph: sample,
             layoutEngineType: undefined,
             selected: null,
             totalNodes: sample.nodes.length,
         };
-
     }
+
+    handleClickOpen = () => {
+        this.setState({open:true});
+    };
+
+    handleClose = () => {
+        this.setState({open:false});
+    };
 
 
     // Updates the graph with a new node
@@ -164,8 +180,9 @@ class Graph extends Component {
         // could be used here to determine node type
         // There is also support for subtypes. (see 'sample' above)
         // The subtype geometry will underlay the 'type' geometry for a node
-        const type = Math.random() < 0.25 ? SPECIAL_TYPE : EMPTY_TYPE;
+        const type = EMPTY_TYPE;
 
+        this.handleClickOpen();
         const viewNode = {
             id: this.state.graph.nodes.length +1,
             title: '',
@@ -240,6 +257,16 @@ class Graph extends Component {
         });
     };
 
+    handleChange = (event) => {
+        this.setState({name: event.target.value});
+    };
+
+    handlePutName= () => {
+        const ultimo = this.state.graph.nodes.length;
+        this.state.graph.nodes[ultimo-1].title = this.state.name;
+        const gr = this.state.graph;
+        this.setState({graph: gr, open: false});
+    };
     /* Define custom graph editing methods here */
 
     render() {
@@ -253,12 +280,38 @@ class Graph extends Component {
 
         return (
             <div id='graph' style={{
-                display: 'grid',
                 gridTemplateColumns: 'auto auto',
                 height: '700px',
                 gridColumnGap: '2px',
                 backgroundColor: '#000',
+                display: 'flex',
             }}>
+
+                <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Nombre del Nodo
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Nombre"
+                            type="email"
+                            fullWidth
+                            onChange={this.handleChange}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={this.handlePutName} color="primary">
+                            Subscribe
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
                 <GraphView  ref='GraphView'
                             nodeKey={NODE_KEY}

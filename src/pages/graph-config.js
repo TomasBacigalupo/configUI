@@ -113,12 +113,12 @@ export default {
         emptyNode: {
             shape: EmptyNodeShape,
             shapeId: '#emptyNode',
-            typeText: 'None',
+            typeText: 'Node',
         },
         empty: {
             shape: CustomEmptyShape,
             shapeId: '#empty',
-            typeText: 'None',
+            typeText: 'Node',
         },
         special: {
             shape: SpecialShape,
