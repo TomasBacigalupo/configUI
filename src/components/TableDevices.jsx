@@ -14,6 +14,8 @@ import history from "../history";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import {red} from "@material-ui/core/colors";
+import Title from "./Title";
+import Typography from "@material-ui/core/Typography";
 
 
 function createData(cols,o) {
@@ -58,6 +60,9 @@ export default function StickyHeadTable(props) {
 
     return (
         <Paper className={classes.root}>
+            <Typography className={classes.title} variant="h4" id="tableTitle" component="div">
+                {props.title}
+            </Typography>
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
