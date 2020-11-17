@@ -66,7 +66,8 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle"; // Configures node/edge types
+import DialogTitle from "@material-ui/core/DialogTitle";
+import topology from "../components/react-digraph"; // Configures node/edge types
 
 var sample = {
     "nodes": [
@@ -156,10 +157,10 @@ class Graph extends Component {
             name: "",
             open: false,
             copiedNode: null,
-            graph: sample,
+            graph: topology,
             layoutEngineType: undefined,
             selected: null,
-            totalNodes: sample.nodes.length,
+            totalNodes: topology.nodes.length,
         };
     }
 

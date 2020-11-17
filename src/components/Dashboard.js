@@ -284,10 +284,10 @@ const schema = {
 
 const deviceColumns = [
     { id: 'id', label: 'ID', minWidth: 170},
-    { id: 'ip_address', label: 'IP address', minWidth: 100 },
     { id: 'name', label: 'Name', minWidth: 100 },
     { id: 'type', label: 'Type', minWidth: 100 },
     { id: 'enabled', label: 'Enable', minWidth: 100 },
+    { id: 'ip_address', label: 'IP address', minWidth: 100 },
 ];
 
 const poolColumns = [
