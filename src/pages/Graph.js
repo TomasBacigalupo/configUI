@@ -12,6 +12,8 @@ import {
     BwdlTransformer, // optional, Example JSON transformer
     GraphUtils // optional, useful utility functions
 } from 'react-digraph';
+
+
 // const GraphConfig =  {
 //     NodeTypes: {
 //         empty: { // required to show empty nodes
@@ -76,40 +78,54 @@ var sample = {
             "title": "Node A",
             "x": 258.3976135253906,
             "y": 331.9783248901367,
-            "type": "custom"
+            "type": "Cassini"
         },
         {
             "id": 2,
             "title": "Node B",
             "x": 593.9393920898438,
             "y": 260.6060791015625,
-            "type": "custom"
+            "type": "Cassini_disabled"
         },
         {
             "id": 3,
             "title": "Node C",
             "x": 237.5757598876953,
             "y": 61.81818389892578,
-            "type": "custom"
+            "type": "Qumran"
         },
         {
             "id": 4,
             "title": "Node C",
             "x": 600.5757598876953,
             "y": 600.81818389892578,
-            "type": "custom"
+            "type": "Qumran_disabled"
+        },
+        {
+            "id": 5,
+            "title": "Node C",
+            "x": 537.5757598876953,
+            "y": 61.81818389892578,
+            "type": "Tomahawk"
+        },
+        {
+            "id": 6,
+            "title": "Node C",
+            "x": 700.5757598876953,
+            "y": 600.81818389892578,
+            "type": "Tomahawk_disabled"
         }
     ],
     "edges": [
         {
             "source": 1,
             "target": 2,
-            "type": IEdge,
+            "type": 'emptyEdge',
         },
         {
             "source": 2,
             "target": 4,
-            "type": "emptyEdge"
+            "type": 'specialEdge'
         }
     ]
 };
@@ -157,11 +173,14 @@ class Graph extends Component {
             name: "",
             open: false,
             copiedNode: null,
-            graph: topology,
+            graph: sample,
+            // graph: topology,
             layoutEngineType: undefined,
             selected: null,
-            totalNodes: topology.nodes.length,
+            // totalNodes: topology.nodes.length,
+            totalNodes: sample.nodes.length,
         };
+
     }
 
     handleClickOpen = () => {
@@ -329,7 +348,15 @@ class Graph extends Component {
                             onSelectEdge={this.onSelectEdge}
                             onCreateEdge={this.onCreateEdge}
                             onSwapEdge={this.onSwapEdge}
-                            onDeleteEdge={this.onDeleteEdge}/>
+                            onDeleteEdge={this.onDeleteEdge}
+                            edgeArrowSize={1}
+                            afterRenderEdge={(id, element, edge, edgeContainer, isEdgeSelected) => {
+                                console.log(element.style);
+                                console.log(edge.style);
+                                edgeContainer.querySelector('.edge').setAttribute("style", "stroke-width: 20px;");
+                                console.log(edgeContainer.querySelector('.edge'));
+                            }}
+                />
             </div>
         );
     }

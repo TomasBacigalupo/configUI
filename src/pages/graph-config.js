@@ -16,8 +16,14 @@ export const SPECIAL_CHILD_SUBTYPE = 'specialChild';
 export const EMPTY_EDGE_TYPE = 'emptyEdge';
 export const SPECIAL_EDGE_TYPE = 'specialEdge';
 export const COMPLEX_CIRCLE_TYPE = 'complexCircle';
+export const CASSINI = 'Cassini';
+export const CASSINI_DISABLED = 'Cassini_Disabled';
+export const QUMRAN = 'Qumran';
+export const QUMRAM_DISABLED = 'Qumran_Disabled';
+export const TOMaHAWK = 'Tomahawk';
+export const TOMaHAWK_DISABLED = 'Tomahawk_Disabled';
 
-export const nodeTypes = [EMPTY_TYPE, POLY_TYPE, SPECIAL_TYPE, SKINNY_TYPE];
+export const nodeTypes = [EMPTY_TYPE, POLY_TYPE, SPECIAL_TYPE, SKINNY_TYPE, CASSINI, CASSINI_DISABLED, QUMRAN, QUMRAM_DISABLED, TOMaHAWK, TOMaHAWK_DISABLED];
 export const edgeTypes = [EMPTY_EDGE_TYPE, SPECIAL_EDGE_TYPE];
 
 const EmptyNodeShape = (
@@ -31,6 +37,42 @@ const CustomEmptyShape = (
         <circle cx="50" cy="50" r="10" />
     </symbol>
 );
+
+const Cassini = (
+    <symbol viewBox="0 0 88 88" width="88" height="88" id="cassini">
+        <rect width="88" height="88"/>
+    </symbol>
+);
+
+const Cassini_Disabled = (
+    <symbol viewBox="0 0 88 88" width="88" height="88" id="cassini_disabled">
+        <rect width="88" height="88" fill="rgb(220,220,220)"/>
+    </symbol>
+);
+
+const Qumran = (
+    <symbol viewBox="-27 0 154 154" id="qumran">
+        <rect transform="translate(50) rotate(45)" width="109" height="109"/>
+    </symbol>
+);
+
+const Qumran_Disabled = (
+    <symbol viewBox="-27 0 154 154" id="qumran_disabled">
+        <rect transform="translate(50) rotate(45)" width="109" height="109" fill="rgb(220,220,220)"/>
+    </symbol>
+);
+const Tomahawk = (
+    <symbol viewBox="0 0 88 72" id="tomahawk" width="88" height="88">
+        <path d="M 0 36 18 0 70 0 88 36 70 72 18 72Z"/>
+    </symbol>
+);
+
+const Tomahawk_Disabled = (
+    <symbol viewBox="0 0 88 72" id="tomahawk_disabled" width="88" height="88">
+        <path d="M 0 36 18 0 70 0 88 36 70 72 18 72Z" fill="rgb(220,220,220)"/>
+    </symbol>
+);
+
 
 const SpecialShape = (
     <symbol viewBox="-27 0 154 154" id="special" width="154" height="154">
@@ -74,7 +116,7 @@ const SpecialChildShape = (
 );
 
 const EmptyEdgeShape = (
-    <symbol viewBox="0 0 50 50" id="emptyEdge">
+    <symbol style={{strokeWidth:'10px'}} viewBox="0 0 50 50" id="emptyEdge">
         <circle cx="25" cy="25" r="8" fill="currentColor" />
     </symbol>
 );
@@ -97,6 +139,7 @@ export default {
         emptyEdge: {
             shape: EmptyEdgeShape,
             shapeId: '#emptyEdge',
+            strokeWidth: '20',
         },
         specialEdge: {
             shape: SpecialEdgeShape,
@@ -120,6 +163,41 @@ export default {
             shapeId: '#empty',
             typeText: 'Node',
         },
+
+        Cassini: {
+            shape: Cassini,
+            shapeId: '#cassini',
+            typeText: 'Cassini',
+        },
+
+        Cassini_disabled: {
+            shape: Cassini_Disabled,
+            shapeId: '#cassini_disabled',
+            typeText: 'Cassini',
+        },
+        Qumran: {
+            shape: Qumran,
+            shapeId: '#qumran',
+            typeText: 'Qumran',
+        },
+
+        Qumran_disabled: {
+            shape: Qumran_Disabled,
+            shapeId: '#qumran_disabled',
+            typeText: 'Qumran',
+        },
+        Tomahawk: {
+            shape: Tomahawk,
+            shapeId: '#tomahawk',
+            typeText: 'Tomahawk',
+        },
+
+        Tomahawk_disabled: {
+            shape: Tomahawk_Disabled,
+            shapeId: '#tomahawk_disabled',
+            typeText: 'Tomahawk',
+        },
+
         special: {
             shape: SpecialShape,
             shapeId: '#special',
