@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -27,17 +28,12 @@ import DashboardIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import DevicesIcon from '@material-ui/icons/Devices';
-import {JsonToTable} from "react-json-to-table";
 import devices from "./devices";
-import Example from "./Example";
-import Table from 'react-jsonschema-table';
 import "../styles/table.css"
-
-
-import SchemaViewer from 'material-ui-json-schema-viewer';
-import {blue} from "@material-ui/core/colors";
 import TableDevices from "./TableDevices";
 import pools from "./pools";
+import schemaDevice from "../Forms/deviceSchemaForm";
+import schemaPool from "../Forms/poolSchemaForm";
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -150,102 +146,6 @@ var settings = {
     }
 };
 
-//TODO: bring from api
-const schemaDevice = {
-    title: "Device",
-    description: "device creation form",
-    type: "object",
-    required: ["name"],
-    properties: {
-        name: {type: "string", title: "name"},
-        enable: {type: "boolean", title: "enabled", default: false},
-        ip: {type: "string", title: "IP"},
-        tags: {
-            title: "Tags",
-            type: "array",
-            items: {
-                type: "object",
-                properties: {
-                    tag: {
-                        title: "Tag",
-                        type: "string",
-                        default: "tag name"
-                    }
-                }
-            }
-        },
-        port_channels: {
-            title: "Port Channels",
-            type: "array",
-            items: {
-                type: "object",
-                properties: {
-                    portChannel: {
-                        title: "Port Channel",
-                        type: "string",
-                        default: "port channel"
-                    }
-                }
-            }
-        },
-        "Ports Con puertos": {
-            "type": "array",
-            "title": "Ports con Puertos",
-            "items": {
-                "type": "array",
-                "title": "Puertos",
-                "items": {
-                    properties: {
-                        portChannel: {
-                            title: "Port Channel",
-                            type: "string",
-                            default: "port channel"
-                        },
-                        tag: {
-                            title: "Tag",
-                            type: "string",
-                            default: "tag name"
-                        },
-                        enable: {type: "boolean", title: "enabled", default: false},
-                        listPorts:{
-                            type: "integer",
-                            title: "puertos disponibles",
-                            enum:[
-                                8080,
-                                9090,
-                                3336
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-    }
-};
-
-const schemaPool = {
-    title: "Pool",
-    description: "pool creation form",
-    type: "object",
-    required: ["name"],
-    properties: {
-        name: {type: "string", title: "name"},
-        subnets: {
-            title: "Subnets",
-            type: "array",
-            items: {
-                type: "object",
-                properties: {
-                    tag: {
-                        title: "Subnet",
-                        type: "string",
-                        default: "subnet_01"
-                    }
-                }
-            }
-        },
-    }
-};
 
 const schema = {
     properties: {
@@ -304,6 +204,9 @@ export default function Dashboard() {
     const [schemaApi, setSchema] = React.useState(schemaDevice);
     const [cols, setCols] = React.useState(deviceColumns);
     const [rows, setRows] = React.useState(devices);
+
+    const history = useHistory();
+    const navigateToGraph = () => history.push('/graph');
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -390,6 +293,12 @@ export default function Dashboard() {
                                 setRows(pools);
                                 setCols(poolColumns);
                             }} />
+                        </ListItem>
+                        <ListItem button >
+                            <ListItemIcon>
+                                <ListAltIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="Graph" onClick={navigateToGraph} />
                         </ListItem>
                     </div>
                 </List>

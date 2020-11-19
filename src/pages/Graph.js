@@ -12,41 +12,7 @@ import {
     BwdlTransformer, // optional, Example JSON transformer
     GraphUtils // optional, useful utility functions
 } from 'react-digraph';
-
-
-// const GraphConfig =  {
-//     NodeTypes: {
-//         empty: { // required to show empty nodes
-//             typeText: "None",
-//             shapeId: "#empty", // relates to the type property of a node
-//             shape: (
-//                 <symbol viewBox="0 0 100 100" id="empty" key="0">
-//                     <circle cx="50" cy="50" r="45"></circle>
-//                 </symbol>
-//             )
-//         },
-//         custom: { // required to show empty nodes
-//             typeText: "Custom",
-//             shapeId: "#custom", // relates to the type property of a node
-//             shape: (
-//                 <symbol viewBox="0 0 50 25" id="custom" key="0">
-//                     <ellipse cx="50" cy="25" rx="50" ry="25"></ellipse>
-//                 </symbol>
-//             )
-//         }
-//     },
-//     NodeSubtypes: {},
-//     EdgeTypes: {
-//         emptyEdge: {  // required to show empty edges
-//             shapeId: "#emptyEdge",
-//             shape: (
-//                 <symbol viewBox="0 0 50 50" id="emptyEdge" key="0">
-//                     <circle cx="25" cy="25" r="8" fill="currentColor"> </circle>
-//                 </symbol>
-//             )
-//         }
-//     }
-// };
+import Form from "@rjsf/material-ui";
 
 
 import GraphConfig, {
@@ -61,15 +27,15 @@ import GraphConfig, {
     SPECIAL_EDGE_TYPE,
     SPECIAL_TYPE,
     SKINNY_TYPE,
-} from './graph-config';
+} from '../Graph/graph-config';
 import Dialog from "@material-ui/core/Dialog";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import topology from "../components/react-digraph"; // Configures node/edge types
+import topology from "../components/react-digraph";
+import schemaDevice from "../Forms/deviceSchemaForm";
+import schemaEdge from "../Forms/edgeSchemaForm"; // Configures node/edge types
 
 var sample = {
     "nodes": [
@@ -121,6 +87,7 @@ var sample = {
             "source": 1,
             "target": 2,
             "type": 'emptyEdge',
+            "strokeWidth": '10px',
         },
         {
             "source": 2,
@@ -129,40 +96,6 @@ var sample = {
         }
     ]
 };
-//
-// const GraphConfig =  {
-//     NodeTypes: {
-//         empty: { // required to show empty nodes
-//             typeText: "None",
-//             shapeId: "#empty", // relates to the type property of a node
-//             shape: (
-//                 <symbol viewBox="0 0 100 100" id="empty" key="0">
-//                     <circle cx="50" cy="50" r="45"></circle>
-//                 </symbol>
-//             )
-//         },
-//         custom: { // required to show empty nodes
-//             typeText: "Custom",
-//             shapeId: "#custom", // relates to the type property of a node
-//             shape: (
-//                 <symbol viewBox="0 0 50 25" id="custom" key="0">
-//                     <ellipse cx="50" cy="25" rx="50" ry="25"></ellipse>
-//                 </symbol>
-//             )
-//         }
-//     },
-//     NodeSubtypes: {},
-//     EdgeTypes: {
-//         emptyEdge: {  // required to show empty edges
-//             shapeId: "#emptyEdge",
-//             shape: (
-//                 <symbol viewBox="0 0 50 50" id="emptyEdge" key="0">
-//                     <circle cx="25" cy="25" r="8" fill="currentColor"> </circle>
-//                 </symbol>
-//             )
-//         }
-//     }
-// };
 
 class Graph extends Component {
 
@@ -171,24 +104,28 @@ class Graph extends Component {
 
         this.state = {
             name: "",
-            open: false,
+            nodeDialogOpen: false,
+            edgeDialogOpen:false,
             copiedNode: null,
-            graph: sample,
-            // graph: topology,
+            // graph: sample,
+            graph: topology,
             layoutEngineType: undefined,
             selected: null,
-            // totalNodes: topology.nodes.length,
-            totalNodes: sample.nodes.length,
+            totalNodes: topology.nodes.length,
+            // totalNodes: sample.nodes.length,
         };
 
     }
 
-    handleClickOpen = () => {
-        this.setState({open:true});
+    handleClickNodeOpen = () => {
+        this.setState({nodeDialogOpen:true});
     };
 
     handleClose = () => {
-        this.setState({open:false});
+        this.setState({
+            nodeDialogOpen:false,
+            edgeDialogOpen:false,
+        });
     };
 
 
@@ -202,7 +139,8 @@ class Graph extends Component {
         // The subtype geometry will underlay the 'type' geometry for a node
         const type = EMPTY_TYPE;
 
-        this.handleClickOpen();
+        this.handleClickNodeOpen();
+
         const viewNode = {
             id: this.state.graph.nodes.length +1,
             title: '',
@@ -221,6 +159,7 @@ class Graph extends Component {
         // This is just an example - any sort of logic
         // could be used here to determine edge type
         const type = EMPTY_EDGE_TYPE;
+        this.setState({edgeDialogOpen: true});
 
         const viewEdge = {
             source: sourceViewNode[NODE_KEY],
@@ -285,8 +224,9 @@ class Graph extends Component {
         const ultimo = this.state.graph.nodes.length;
         this.state.graph.nodes[ultimo-1].title = this.state.name;
         const gr = this.state.graph;
-        this.setState({graph: gr, open: false});
+        this.setState({graph: gr, nodeDialogOpen: false});
     };
+
     /* Define custom graph editing methods here */
 
     render() {
@@ -307,29 +247,33 @@ class Graph extends Component {
                 display: 'flex',
             }}>
 
-                <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+                <Dialog open={this.state.nodeDialogOpen} onClose={this.handleNodeClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
-                            Nombre del Nodo
-                        </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Nombre"
-                            type="email"
-                            fullWidth
-                            onChange={this.handleChange}
-                        />
+                        <Form schema={schemaDevice}/>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={this.handlePutName} color="primary">
-                            Subscribe
+                        {/*<Button onClick={this.handlePutName} color="primary">*/}
+                        {/*    Subscribe*/}
+                        {/*</Button>*/}
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog open={this.state.edgeDialogOpen} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                    <DialogContent>
+                        <Form schema={schemaEdge}/>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color="primary">
+                            Cancel
                         </Button>
+                        {/*<Button onClick={this.handlePutName} color="primary">*/}
+                        {/*    Subscribe*/}
+                        {/*</Button>*/}
                     </DialogActions>
                 </Dialog>
 
@@ -349,12 +293,28 @@ class Graph extends Component {
                             onCreateEdge={this.onCreateEdge}
                             onSwapEdge={this.onSwapEdge}
                             onDeleteEdge={this.onDeleteEdge}
-                            edgeArrowSize={1}
+                            edgeArrowSize={0.1}
                             afterRenderEdge={(id, element, edge, edgeContainer, isEdgeSelected) => {
-                                console.log(element.style);
-                                console.log(edge.style);
-                                edgeContainer.querySelector('.edge').setAttribute("style", "stroke-width: 20px;");
-                                console.log(edgeContainer.querySelector('.edge'));
+                                try {
+                                    const width = edge.handleText.split("G")[0]/20;
+                                    const longType = edge.type.split("_");
+                                    const type = longType[0];
+                                    const disabled = longType[longType.length-1];
+                                    if(type === "CFP2"){
+                                        edgeContainer.querySelector('.edge').setAttribute("style", "stroke-width:" + width + "px; stroke: red");
+                                    }if(type === "UNKNOWN"){
+                                        edgeContainer.querySelector('.edge').setAttribute("style", "stroke-width:" + width + "px; stroke: black");
+                                    }else if(type === "OSPF28"){
+                                        edgeContainer.querySelector('.edge').setAttribute("style", "stroke-width:" + width + "px; stroke: blue");
+                                    }else if(disabled === "disabled"){
+                                        edgeContainer.querySelector('.edge').setAttribute("style", "stroke-width:" + width + "px; stroke: grey");
+                                    }else{
+                                        console.log(edge);
+                                    }
+                                }catch (e) {
+                                    console.log(e)
+                                }
+
                             }}
                 />
             </div>

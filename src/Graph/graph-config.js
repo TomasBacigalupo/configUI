@@ -116,7 +116,7 @@ const SpecialChildShape = (
 );
 
 const EmptyEdgeShape = (
-    <symbol style={{strokeWidth:'10px'}} viewBox="0 0 50 50" id="emptyEdge">
+    <symbol viewBox="0 0 50 50" id="emptyEdge">
         <circle cx="25" cy="25" r="8" fill="currentColor" />
     </symbol>
 );
@@ -139,7 +139,7 @@ export default {
         emptyEdge: {
             shape: EmptyEdgeShape,
             shapeId: '#emptyEdge',
-            strokeWidth: '20',
+            strokeWidth: '10',
         },
         specialEdge: {
             shape: SpecialEdgeShape,
