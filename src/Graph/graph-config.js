@@ -39,14 +39,14 @@ const CustomEmptyShape = (
 );
 
 const Cassini = (
-    <symbol viewBox="0 0 88 88" width="88" height="88" id="cassini">
-        <rect width="88" height="88"/>
+    <symbol viewBox="0 0 200 88" width="200" height="88" id="cassini">
+        <rect width="200" height="88"/>
     </symbol>
 );
 
 const Cassini_Disabled = (
-    <symbol viewBox="0 0 88 88" width="88" height="88" id="cassini_disabled">
-        <rect width="88" height="88" fill="rgb(220,220,220)"/>
+    <symbol viewBox="0 0 200 88" width="200" height="88" id="cassini_disabled">
+        <rect width="200" height="88" fill="rgb(220,220,220)"/>
     </symbol>
 );
 

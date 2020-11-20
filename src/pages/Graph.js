@@ -35,7 +35,16 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import topology from "../components/react-digraph";
 import schemaDevice from "../Forms/deviceSchemaForm";
-import schemaEdge from "../Forms/edgeSchemaForm"; // Configures node/edge types
+import schemaEdge from "../Forms/edgeSchemaForm";
+import Popover from "@material-ui/core/Popover";
+import Typography from "@material-ui/core/Typography";
+import makeStyles from "@material-ui/core/styles/makeStyles"; // Configures node/edge types
+
+const useStyles = makeStyles((theme) => ({
+    typography: {
+        padding: theme.spacing(2),
+    },
+}));
 
 var sample = {
     "nodes": [
@@ -113,6 +122,7 @@ class Graph extends Component {
             selected: null,
             totalNodes: topology.nodes.length,
             // totalNodes: sample.nodes.length,
+            anchorEl: null,
         };
 
     }
@@ -197,12 +207,12 @@ class Graph extends Component {
     // Node 'mouseUp' handler
     onSelectNode = (viewNode: INode | null) => {
         // Deselect events will send Null viewNode
-        this.setState({ selected: viewNode });
+        this.setState({ selected: viewNode});
     };
 
     // Edge 'mouseUp' handler
     onSelectEdge = (viewEdge: IEdge) => {
-        this.setState({ selected: viewEdge });
+        this.setState({ selected: viewEdge, anchorEl:true });
     };
 
     // Called when an edge is deleted
@@ -227,6 +237,15 @@ class Graph extends Component {
         this.setState({graph: gr, nodeDialogOpen: false});
     };
 
+    handleClick = (event) => {
+        this.setState({anchorEl: event.currentTarget});
+    };
+
+    handleClose = () => {
+        this.setState({anchorEl: null});
+    };
+
+
     /* Define custom graph editing methods here */
 
     render() {
@@ -238,10 +257,16 @@ class Graph extends Component {
         const NodeSubtypes = GraphConfig.NodeSubtypes;
         const EdgeTypes = GraphConfig.EdgeTypes;
 
+
+
+        const open = Boolean(this.state.anchorEl);
+        const id = open ? 'simple-popover' : undefined;
+
         return (
             <div id='graph' style={{
                 gridTemplateColumns: 'auto auto',
                 height: '700px',
+                width:'100%',
                 gridColumnGap: '2px',
                 backgroundColor: '#000',
                 display: 'flex',
@@ -276,6 +301,29 @@ class Graph extends Component {
                         {/*</Button>*/}
                     </DialogActions>
                 </Dialog>
+
+                <Popover
+
+                    id={id}
+                    open={open}
+                    anchorEl={this.state.anchorEl}
+                    onClose={this.handleClose}
+                    anchorReference="anchorPosition"
+                    anchorPosition={{ top: 200, left: 400 }}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                >
+                    {console.log(this.state.selected)}
+                    <Typography>Type {this.state.selected ? this.state.selected.type: "no Selecciono item"}</Typography>
+                    <Typography>Velocity {this.state.selected ? this.state.selected.handleText : "no Selecciono item"}</Typography>
+                    <Typography>From {this.state.selected ? this.state.selected.label_from: "no Selecciono item"} to {this.state.selected ? this.state.selected.label_to: "no Selecciono item"}</Typography>
+                </Popover>
 
                 <GraphView  ref='GraphView'
                             nodeKey={NODE_KEY}
