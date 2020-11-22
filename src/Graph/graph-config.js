@@ -116,8 +116,8 @@ const SpecialChildShape = (
 );
 
 const EmptyEdgeShape = (
-    <symbol viewBox="0 0 50 50" id="emptyEdge">
-        <circle cx="25" cy="25" r="8" fill="currentColor" />
+    <symbol viewBox="0 0 200 88" width="200" height="88" id="emptyEdge">
+        <rect width="00" height="0" fill="currentColor"/>
     </symbol>
 );
 

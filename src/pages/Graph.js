@@ -38,7 +38,10 @@ import schemaDevice from "../Forms/deviceSchemaForm";
 import schemaEdge from "../Forms/edgeSchemaForm";
 import Popover from "@material-ui/core/Popover";
 import Typography from "@material-ui/core/Typography";
-import makeStyles from "@material-ui/core/styles/makeStyles"; // Configures node/edge types
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions"; // Configures node/edge types
 
 const useStyles = makeStyles((theme) => ({
     typography: {
@@ -131,7 +134,7 @@ class Graph extends Component {
         this.setState({nodeDialogOpen:true});
     };
 
-    handleClose = () => {
+    handleDialogClose = () => {
         this.setState({
             nodeDialogOpen:false,
             edgeDialogOpen:false,
@@ -268,17 +271,16 @@ class Graph extends Component {
                 height: '700px',
                 width:'100%',
                 gridColumnGap: '2px',
-                backgroundColor: '#000',
                 display: 'flex',
             }}>
 
-                <Dialog open={this.state.nodeDialogOpen} onClose={this.handleNodeClose} aria-labelledby="form-dialog-title">
+                <Dialog open={this.state.nodeDialogOpen} onClose={()=>{this.handleDialogClose()}} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
                     <DialogContent>
                         <Form schema={schemaDevice}/>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleClose} color="primary">
+                        <Button onClick={()=>{this.handleDialogClose()}} color="primary">
                             Cancel
                         </Button>
                         {/*<Button onClick={this.handlePutName} color="primary">*/}
@@ -287,13 +289,13 @@ class Graph extends Component {
                     </DialogActions>
                 </Dialog>
 
-                <Dialog open={this.state.edgeDialogOpen} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+                <Dialog open={this.state.edgeDialogOpen} onClose={()=>{this.handleDialogClose()}} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
                     <DialogContent>
                         <Form schema={schemaEdge}/>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleClose} color="primary">
+                        <Button onClick={()=>{this.handleDialogClose()}} color="primary">
                             Cancel
                         </Button>
                         {/*<Button onClick={this.handlePutName} color="primary">*/}
@@ -319,12 +321,30 @@ class Graph extends Component {
                         horizontal: 'center',
                     }}
                 >
+                    <Card >
+                        <CardContent>
+                            <Typography className={{title: {
+                                fontSize: 14,
+                            }}} color="textSecondary" gutterBottom>
+                                Link
+                            </Typography>
+                            <Typography variant="h5" component="h2">
+                                Type {this.state.selected ? this.state.selected.type: "no Selecciono item"}
+                            </Typography>
+                            <Typography color="textSecondary">
+                                Velocity {this.state.selected ? this.state.selected.handleText : "no Selecciono item"}
+                            </Typography>
+                            <Typography variant="body2" component="p">
+                                From {this.state.selected ? this.state.selected.label_from: "no Selecciono item"} to {this.state.selected ? this.state.selected.label_to: "no Selecciono item"}
+                            </Typography>
+                        </CardContent>
+                    </Card>
                     {console.log(this.state.selected)}
-                    <Typography>Type {this.state.selected ? this.state.selected.type: "no Selecciono item"}</Typography>
-                    <Typography>Velocity {this.state.selected ? this.state.selected.handleText : "no Selecciono item"}</Typography>
-                    <Typography>From {this.state.selected ? this.state.selected.label_from: "no Selecciono item"} to {this.state.selected ? this.state.selected.label_to: "no Selecciono item"}</Typography>
                 </Popover>
-
+                <div>
+                    <button onClick={()=>{this.onCreateNode()}}>New</button>
+                    <button onClick={()=>{this.onCreateNode()}}>How</button>
+                </div>
                 <GraphView  ref='GraphView'
                             nodeKey={NODE_KEY}
                             nodes={nodes}
@@ -348,6 +368,7 @@ class Graph extends Component {
                                     const longType = edge.type.split("_");
                                     const type = longType[0];
                                     const disabled = longType[longType.length-1];
+                                    console.log(edgeContainer);
                                     if(type === "CFP2"){
                                         edgeContainer.querySelector('.edge').setAttribute("style", "stroke-width:" + width + "px; stroke: red");
                                     }if(type === "UNKNOWN"){
