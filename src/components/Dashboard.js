@@ -35,6 +35,8 @@ import pools from "./pools";
 import schemaDevice from "../Forms/deviceSchemaForm";
 import schemaPool from "../Forms/poolSchemaForm";
 import Graph from "../pages/Graph";
+import BubbleChartIcon from '@material-ui/icons/BubbleChart';
+import StorageIcon from '@material-ui/icons/Storage';
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -383,7 +385,12 @@ export default function Dashboard() {
                             </ListItem>
                             <ListItem button >
                                 <ListItemIcon>
-                                    <DevicesIcon />
+                                    <DevicesIcon onClick={()=>{
+                                        setShowGraph(false);
+                                        setSchema(schemaDevice);
+                                        setCols(deviceColumns);
+                                        setRows(devices);
+                                    }}/>
                                 </ListItemIcon>
                                 <ListItemText primary="Devices"  onClick={()=>{
                                     setShowGraph(false);
@@ -394,7 +401,12 @@ export default function Dashboard() {
                             </ListItem>
                             <ListItem button >
                                 <ListItemIcon>
-                                    <ListAltIcon/>
+                                    <StorageIcon nClick={()=>{
+                                        setShowGraph(false);
+                                        setSchema(schemaPool);
+                                        setRows(pools);
+                                        setCols(poolColumns);
+                                    }}/>
                                 </ListItemIcon>
                                 <ListItemText primary="Pools" onClick={()=>{
                                     setShowGraph(false);
@@ -405,7 +417,7 @@ export default function Dashboard() {
                             </ListItem>
                             <ListItem button >
                                 <ListItemIcon>
-                                    <ListAltIcon/>
+                                    <BubbleChartIcon onClick={() => {setShowGraph(true)}} />
                                 </ListItemIcon>
                                 <ListItemText primary="Graph" onClick={() => {setShowGraph(true)}} />
                             </ListItem>
@@ -419,7 +431,7 @@ export default function Dashboard() {
                     <Container maxWidth="lg"  className={classes.container}>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <TableDevices title={"Titulo"} cols={cols} rows={rows}/>
+                                <TableDevices title={"List"} cols={cols} rows={rows}/>
                             </Grid>
                             <Grid item xs={12}>
                                 <Paper className={classes.paper}>

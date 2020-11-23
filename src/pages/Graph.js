@@ -47,6 +47,12 @@ const useStyles = makeStyles((theme) => ({
     typography: {
         padding: theme.spacing(2),
     },
+    margin: {
+        margin: theme.spacing(1),
+    },
+    extendedIcon: {
+        marginRight: theme.spacing(1),
+    },
 }));
 
 var sample = {
@@ -342,8 +348,14 @@ class Graph extends Component {
                     {console.log(this.state.selected)}
                 </Popover>
                 <div>
-                    <button onClick={()=>{this.onCreateNode()}}>New</button>
-                    <button onClick={()=>{this.onCreateNode()}}>How</button>
+                    <Button variant="contained" color="primary"
+                            onClick={()=>{this.onCreateNode()}}>
+                        New
+                    </Button>
+                    <br/><br/>
+                    <Button variant="contained" color="primary" onClick={()=>{this.onCreateNode()}}>
+                        How
+                    </Button>
                 </div>
                 <GraphView  ref='GraphView'
                             nodeKey={NODE_KEY}
